@@ -1,9 +1,10 @@
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
-import { ConfigService } from '@nestjs/config';
 
-export const corsConfig = (configService: ConfigService): CorsOptions => {
+import { EnvService } from '@/infra/env/env.service';
+
+export const corsConfig = (envService: EnvService): CorsOptions => {
   return {
-    origin: configService.getOrThrow<string>('ALLOWED_ORIGIN'),
+    origin: envService.allowedOrigin(),
     credentials: true,
   };
 };
