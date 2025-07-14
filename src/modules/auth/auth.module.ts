@@ -7,6 +7,7 @@ import { TokenService } from '@/shared/services/token.service';
 import { UserModule } from '../user/user.module';
 
 import { AuthCookieService } from './auth-cookie.service';
+import { AuthPasswordService } from './auth-password.service';
 import { AuthTokenService } from './auth-token.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
@@ -21,6 +22,7 @@ import { JwtStrategy } from './jwt.strategy';
     TokenService,
     AuthCookieService,
     AuthTokenService,
+    AuthPasswordService,
     JwtStrategy,
   ],
 })

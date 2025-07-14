@@ -6,10 +6,10 @@ import { CreateUserDto } from './create-user.dto';
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsNumber()
   @IsOptional()
-  phoneNumber: number;
+  phoneNumber?: number;
 
   @IsString()
   @IsUrl()
   @IsOptional()
-  avatarPath: string;
+  avatarPath?: string;
 }

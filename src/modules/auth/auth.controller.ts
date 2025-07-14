@@ -10,8 +10,12 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
+import { Auth, CurrentUser } from '@/common/decorators';
+
 import { AuthCookieService } from './auth-cookie.service';
+import { AuthPasswordService } from './auth-password.service';
 import { AuthService } from './auth.service';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
@@ -20,6 +24,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly authCookieService: AuthCookieService,
+    private readonly authPasswordService: AuthPasswordService,
   ) {}
 
   @HttpCode(HttpStatus.CREATED)
@@ -61,5 +66,12 @@ export class AuthController {
     this.authCookieService.removeToken(res, 'refreshToken');
 
     return true;
+  }
+
+  @Auth()
+  @HttpCode(HttpStatus.OK)
+  @Post('change-password')
+  changePassword(@CurrentUser('id') id: string, @Body() dto: ChangePasswordDto) {
+    return this.authPasswordService.changePassword(id, dto);
   }
 }
