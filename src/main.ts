@@ -1,5 +1,6 @@
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import * as cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
 import { corsConfig } from './config/cors.config';
@@ -10,10 +11,14 @@ async function bootstrap() {
   const envService = app.get(EnvService);
   const logger = new Logger('Bootstrap');
 
+  app.use(cookieParser());
+
   const appPrefix = envService.appPrefix();
   app.setGlobalPrefix(appPrefix);
 
   app.enableCors(corsConfig(envService));
+
+  app.useGlobalPipes(new ValidationPipe());
 
   try {
     const port = envService.port();

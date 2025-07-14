@@ -10,4 +10,7 @@ export const envSchema = Joi.object({
   POSTGRES_DB: Joi.string().required(),
   REDIS_PASSWORD: Joi.string().required(),
   DATABASE_URL: Joi.string().required(),
+  JWT_ACCESS_SECRET: Joi.string().required(),
+  JWT_REFRESH_SECRET: Joi.string().required(),
+  DOMAIN: Joi.string().required(),
 });

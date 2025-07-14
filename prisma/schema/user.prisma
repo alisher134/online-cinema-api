@@ -4,10 +4,10 @@ model User {
   firstName String
   lastName String
   email String @unique
-  phoneNumber Int
+  phoneNumber Int?
   password String
 
-  avatarPath String @map("avatar_path")
+  avatarPath String? @map("avatar_path")
   role UserRole @default(USER)
 
   createdAt DateTime @default(now()) @map("created_at")

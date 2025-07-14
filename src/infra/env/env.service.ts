@@ -23,7 +23,23 @@ export class EnvService {
     return this.nodeEnv() === 'production';
   }
 
-  nodeEnv() {
+  isDev() {
+    return this.nodeEnv() === 'development';
+  }
+
+  jwtAccessSecret() {
+    return this.configService.get<string>('JWT_ACCESS_SECRET') || '';
+  }
+
+  jwtRefreshSecret() {
+    return this.configService.get<string>('JWT_REFRESH_SECRET') || '';
+  }
+
+  domain() {
+    return this.configService.get<string>('DOMAIN');
+  }
+
+  private nodeEnv() {
     return this.configService.get<NodeEnv>('NODE_ENV', 'development');
   }
 }
