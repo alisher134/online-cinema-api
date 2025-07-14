@@ -7,6 +7,7 @@ import { TokenService } from '@/shared/services/token.service';
 import { UserModule } from '../user/user.module';
 
 import { AuthCookieService } from './auth-cookie.service';
+import { AuthTokenService } from './auth-token.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
@@ -14,6 +15,13 @@ import { JwtStrategy } from './jwt.strategy';
 @Module({
   imports: [UserModule, JwtModule],
   controllers: [AuthController],
-  providers: [AuthService, HashService, TokenService, AuthCookieService, JwtStrategy],
+  providers: [
+    AuthService,
+    HashService,
+    TokenService,
+    AuthCookieService,
+    AuthTokenService,
+    JwtStrategy,
+  ],
 })
 export class AuthModule {}
