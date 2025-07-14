@@ -53,7 +53,7 @@ export class UserService {
     });
   }
 
-  async remove(id: string) {
+  async delete(id: string) {
     await this.findOneById(id);
     return this.prismaService.user.delete({ where: { id } });
   }
