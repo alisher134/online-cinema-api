@@ -1,19 +1,28 @@
 model User {
   id String @id @default(uuid())
 
-  firstName String
-  lastName String
-  email String @unique
-  phoneNumber Int?
-  password String
+  firstName   String
+  lastName    String
+  email       String      @unique
+  password    String
+  phoneNumber String?
+  country     String?
+  gender      UserGender?
+  age         Int?
+  aboutMe     String?     @map("about_me")
 
-  avatarPath String? @map("avatar_path")
-  role UserRole @default(USER)
+  avatarPath String?  @map("avatar_path")
+  role       UserRole @default(USER)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("update_at")
 
   @@map("user")
+}
+
+enum UserGender {
+  MALE
+  FEMALE
 }
 
 enum UserRole {

@@ -35,7 +35,7 @@ export class AuthTokenService {
 
   async generateAccessToken(payload: AuthJwtPayload) {
     const jwtAccessSecret = this.envService.jwtAccessSecret();
-    return this.tokenService.generateToken(payload, { expiresIn: '5m', secret: jwtAccessSecret });
+    return this.tokenService.generateToken(payload, { expiresIn: '1m', secret: jwtAccessSecret });
   }
 
   async generateRefreshToken(payload: AuthJwtPayload) {

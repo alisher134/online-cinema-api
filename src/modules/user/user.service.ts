@@ -45,6 +45,7 @@ export class UserService {
 
     const userData: Prisma.UserUpdateInput = {
       ...dto,
+      age: Number(dto.age),
     };
 
     return await this.prismaService.user.update({

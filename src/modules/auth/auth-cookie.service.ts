@@ -22,14 +22,12 @@ export class AuthCookieService {
 
   private cookieOptions(res: Response, cookieName: string, token: string, expires: Date) {
     const domain = this.envService.domain();
-    const isProd = this.envService.isProd();
-    const sameSite = isProd ? 'lax' : 'none';
 
     res.cookie(cookieName, token, {
       httpOnly: true,
-      secure: isProd,
+      secure: true,
       expires,
-      sameSite,
+      sameSite: 'lax',
       domain,
     });
   }
