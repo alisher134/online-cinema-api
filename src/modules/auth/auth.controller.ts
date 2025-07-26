@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -27,24 +28,31 @@ export class AuthController {
     private readonly authPasswordService: AuthPasswordService,
   ) {}
 
+  @HttpCode(HttpStatus.OK)
+  @Get('me')
+  @Auth()
+  async getMe(@CurrentUser('id') id: string) {
+    return this.authService.getMe(id);
+  }
+
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   async register(@Res({ passthrough: true }) res: Response, @Body() dto: RegisterDto) {
-    const { accessToken, refreshToken } = await this.authService.register(dto);
+    const { refreshToken, ...rest } = await this.authService.register(dto);
 
     this.authCookieService.saveToken(res, 'refreshToken', refreshToken);
 
-    return { accessToken };
+    return { ...rest };
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
   async login(@Res({ passthrough: true }) res: Response, @Body() dto: LoginDto) {
-    const { accessToken, refreshToken } = await this.authService.login(dto);
+    const { refreshToken, ...rest } = await this.authService.login(dto);
 
     this.authCookieService.saveToken(res, 'refreshToken', refreshToken);
 
-    return { accessToken };
+    return { ...rest };
   }
 
   @HttpCode(HttpStatus.OK)

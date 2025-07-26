@@ -18,7 +18,7 @@ export class AuthService {
 
   async login(dto: LoginDto) {
     const user = await this.validateUser(dto);
-    return this.AuthTokenService.generateTokens(user.id);
+    return this.authResponse(user.id);
   }
 
   async register(dto: RegisterDto) {
@@ -27,7 +27,7 @@ export class AuthService {
 
     const user = await this.userService.create(dto);
 
-    return this.AuthTokenService.generateTokens(user.id);
+    return this.authResponse(user.id);
   }
 
   async refresh(refreshToken: string) {
@@ -40,6 +40,10 @@ export class AuthService {
     return { accessToken };
   }
 
+  async getMe(id: string) {
+    return this.userService.findOneById(id);
+  }
+
   private async validateUser(dto: LoginDto) {
     const user = await this.userService.findOneByEmail(dto.email);
     if (!user) throw new BadRequestException('Invalid email or password!');
@@ -48,5 +52,9 @@ export class AuthService {
     if (!isValidPassword) throw new BadRequestException('Invalid email or password!');
 
     return user;
+  }
+
+  private async authResponse(userId: string) {
+    return this.AuthTokenService.generateTokens(userId);
   }
 }
