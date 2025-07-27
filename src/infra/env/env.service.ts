@@ -39,6 +39,22 @@ export class EnvService {
     return this.configService.get<string>('DOMAIN');
   }
 
+  googleClientId() {
+    return this.configService.getOrThrow<string>('GOOGLE_CLIENT_ID');
+  }
+
+  googleClientSecret() {
+    return this.configService.getOrThrow<string>('GOOGLE_CLIENT_SECRET');
+  }
+
+  googleCallbackUrl() {
+    return this.configService.getOrThrow<string>('GOOGLE_CALLBACK_URL');
+  }
+
+  clientOrl() {
+    return this.configService.getOrThrow<string>('CLIENT_ORIGIN');
+  }
+
   private nodeEnv() {
     return this.configService.get<NodeEnv>('NODE_ENV', 'development');
   }

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -8,14 +9,21 @@ import {
   Req,
   Res,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
+import { EnvService } from '@/infra/env/env.service';
+
 import { Auth, CurrentUser } from '@/common/decorators';
+import { GoogleAuthGuard } from '@/common/guards/google-auth.guard';
+
+import { UserService } from '../user/user.service';
 
 import { AuthCookieService } from './auth-cookie.service';
 import { AuthPasswordService } from './auth-password.service';
 import { AuthService } from './auth.service';
+import { SocialUserProfile } from './auth.types';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -24,8 +32,10 @@ import { RegisterDto } from './dto/register.dto';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
+    private readonly userService: UserService,
     private readonly authCookieService: AuthCookieService,
     private readonly authPasswordService: AuthPasswordService,
+    private readonly envService: EnvService,
   ) {}
 
   @HttpCode(HttpStatus.OK)
@@ -66,6 +76,33 @@ export class AuthController {
     this.authCookieService.saveToken(res, 'refreshToken', refreshTokenFromCookie);
 
     return { accessToken };
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('google')
+  @UseGuards(GoogleAuthGuard)
+  googleAuth() {}
+
+  @HttpCode(HttpStatus.OK)
+  @Get('google/callback')
+  @UseGuards(GoogleAuthGuard)
+  async googleAuthCallback(
+    @Req() req: { user: SocialUserProfile },
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    if (!req.user) {
+      throw new BadRequestException('User not found by social media');
+    }
+
+    const user = await this.userService.findOrCreateSocialUser(req.user);
+
+    const { accessToken, refreshToken } = await this.authService.authResponse(user.id);
+    this.authCookieService.saveToken(res, 'refreshToken', refreshToken);
+
+    const clientUrl = this.envService.clientOrl();
+    const redirectUrl = `${clientUrl}/auth/by-social?accessToken=${accessToken}`;
+
+    return res.redirect(redirectUrl);
   }
 
   @HttpCode(HttpStatus.OK)

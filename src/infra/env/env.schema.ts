@@ -13,4 +13,8 @@ export const envSchema = Joi.object({
   JWT_ACCESS_SECRET: Joi.string().required(),
   JWT_REFRESH_SECRET: Joi.string().required(),
   DOMAIN: Joi.string().required(),
+  GOOGLE_CLIENT_ID: Joi.string().required(),
+  GOOGLE_CLIENT_SECRET: Joi.string().required(),
+  GOOGLE_CALLBACK_URL: Joi.string().required(),
+  CLIENT_ORIGIN: Joi.string().required(),
 });

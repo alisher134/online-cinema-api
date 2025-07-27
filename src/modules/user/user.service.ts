@@ -5,6 +5,8 @@ import { PrismaService } from '@/infra/prisma/prisma.service';
 
 import { HashService } from '@/shared/services/hash.service';
 
+import { SocialUserProfile } from '../auth/auth.types';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -40,6 +42,16 @@ export class UserService {
     return this.prismaService.user.findUnique({ where: { email } });
   }
 
+  async findOrCreateSocialUser(profile: SocialUserProfile) {
+    let user = await this.findOneByEmail(profile.email);
+
+    if (!user) {
+      user = await this.createSocialUser(profile);
+    }
+
+    return user;
+  }
+
   async update(id: string, dto: UpdateUserDto) {
     await this.findOneById(id);
 
@@ -57,6 +69,18 @@ export class UserService {
   async delete(id: string) {
     await this.findOneById(id);
     return this.prismaService.user.delete({ where: { id } });
+  }
+
+  private async createSocialUser(profile: SocialUserProfile) {
+    return this.prismaService.user.create({
+      data: {
+        email: profile.email,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        password: '',
+        avatarPath: profile.avatarPath,
+      },
+    });
   }
 
   private async hashPassword(password: string) {

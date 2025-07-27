@@ -11,7 +11,8 @@ import { AuthPasswordService } from './auth-password.service';
 import { AuthTokenService } from './auth-token.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from './jwt.strategy';
+import { GoogleStrategy } from './strategies/google.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [UserModule, JwtModule],
@@ -24,6 +25,7 @@ import { JwtStrategy } from './jwt.strategy';
     AuthTokenService,
     AuthPasswordService,
     JwtStrategy,
+    GoogleStrategy,
   ],
 })
 export class AuthModule {}

@@ -13,7 +13,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly hashService: HashService,
-    private readonly AuthTokenService: AuthTokenService,
+    private readonly authTokenService: AuthTokenService,
   ) {}
 
   async login(dto: LoginDto) {
@@ -31,17 +31,21 @@ export class AuthService {
   }
 
   async refresh(refreshToken: string) {
-    const payload = await this.AuthTokenService.validateRefreshToken(refreshToken);
+    const payload = await this.authTokenService.validateRefreshToken(refreshToken);
 
     const user = await this.userService.findOneById(payload.id);
 
-    const accessToken = await this.AuthTokenService.generateAccessToken({ id: user.id });
+    const accessToken = await this.authTokenService.generateAccessToken({ id: user.id });
 
     return { accessToken };
   }
 
   async getMe(id: string) {
     return this.userService.findOneById(id);
+  }
+
+  async authResponse(userId: string) {
+    return this.authTokenService.generateTokens(userId);
   }
 
   private async validateUser(dto: LoginDto) {
@@ -52,9 +56,5 @@ export class AuthService {
     if (!isValidPassword) throw new BadRequestException('Invalid email or password!');
 
     return user;
-  }
-
-  private async authResponse(userId: string) {
-    return this.AuthTokenService.generateTokens(userId);
   }
 }
