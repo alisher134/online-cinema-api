@@ -1,0 +1,11 @@
+model Genre {
+  id String @id @default(uuid())
+
+  title String
+  slug  String @unique
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("update_at")
+
+  @@map("genre")
+}

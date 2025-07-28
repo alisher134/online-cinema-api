@@ -18,7 +18,11 @@ async function bootstrap() {
 
   app.enableCors(corsConfig(envService));
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
 
   try {
     const port = envService.port();
