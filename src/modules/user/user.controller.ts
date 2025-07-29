@@ -9,7 +9,7 @@ import {
   Patch,
   Put,
 } from '@nestjs/common';
-import { UserRole } from 'prisma/generated';
+import { UserRole } from '@prisma/client';
 
 import { Auth, CurrentUser } from '@/common/decorators';
 

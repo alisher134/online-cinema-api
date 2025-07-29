@@ -1,6 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
+import { UserGender } from '@prisma/client';
 import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
-import { UserGender } from 'prisma/generated';
 
 import { CreateUserDto } from './create-user.dto';
 
