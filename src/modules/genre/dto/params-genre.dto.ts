@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional } from 'class-validator';
+import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class ParamsGenreDto {
   @IsOptional()
@@ -11,4 +11,16 @@ export class ParamsGenreDto {
   @Type(() => Number)
   @IsNumber()
   perPage?: number;
+
+  @IsOptional()
+  @IsString()
+  sortBy?: string;
+
+  @IsOptional()
+  @IsIn(['asc', 'desc'])
+  sortOrder?: 'asc' | 'desc';
+
+  @IsOptional()
+  @IsString()
+  search?: string;
 }

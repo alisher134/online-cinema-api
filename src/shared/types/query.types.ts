@@ -1,13 +1,16 @@
-export type PaginationArgs = {
+export interface QueryParamsArgs {
+  search?: string;
+  searchFields?: string[];
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
   page?: number;
   perPage?: number;
-};
+}
 
 export type PaginationMeta = {
   page: number;
   perPage: number;
   totalRecords: number;
-  totalPages: number;
 };
 
 export type PaginatedResponse<T> = {

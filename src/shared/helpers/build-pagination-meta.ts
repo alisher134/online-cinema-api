@@ -1,6 +1,6 @@
-import { PaginationMeta } from '@/shared/types/pagination.types';
+import { PaginationMeta } from '../types/query.types';
 
-export const buildMeta = (params: Omit<PaginationMeta, 'totalPages'>) => {
+export const buildPaginationMeta = (params: PaginationMeta) => {
   const { page, perPage, totalRecords } = params;
 
   return {

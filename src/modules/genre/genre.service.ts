@@ -3,8 +3,8 @@ import { Prisma } from '@prisma/client';
 
 import { PrismaService } from '@/infra/prisma/prisma.service';
 
-import { buildMeta } from '@/shared/helpers/pagination/build-pagination-meta';
-import { getPagination } from '@/shared/helpers/pagination/get-pagination';
+import { buildPaginationMeta } from '@/shared/helpers/build-pagination-meta';
+import { buildQueryOptions } from '@/shared/helpers/query-builder';
 
 import { slugify } from '@/common/utils';
 
@@ -29,19 +29,24 @@ export class GenreService {
   }
 
   async findAll(dto: ParamsGenreDto) {
-    const { page, skip, perPage } = getPagination(dto);
+    const { where, sortBy, page, skip, perPage } = buildQueryOptions({
+      ...dto,
+      searchFields: ['title'],
+    });
 
     const [genres, totalRecords] = await Promise.all([
       this.prismaService.genre.findMany({
+        where,
+        orderBy: sortBy,
         skip,
         take: perPage,
       }),
-      this.prismaService.genre.count(),
+      this.prismaService.genre.count({ where }),
     ]);
 
     return {
       data: genres,
-      pagination: buildMeta({ page, perPage, totalRecords }),
+      pagination: buildPaginationMeta({ page, perPage, totalRecords }),
     };
   }
 
