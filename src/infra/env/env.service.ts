@@ -55,6 +55,18 @@ export class EnvService {
     return this.configService.getOrThrow<string>('CLIENT_ORIGIN');
   }
 
+  cloudinaryName() {
+    return this.configService.getOrThrow<string>('CLOUDINARY_NAME');
+  }
+
+  cloudinaryApiKey() {
+    return this.configService.getOrThrow<string>('CLOUDINARY_API_KEY');
+  }
+
+  cloudinaryApiSecret() {
+    return this.configService.getOrThrow<string>('CLOUDINARY_API_SECRET');
+  }
+
   private nodeEnv() {
     return this.configService.get<NodeEnv>('NODE_ENV', 'development');
   }
