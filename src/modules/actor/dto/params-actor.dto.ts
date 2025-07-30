@@ -19,8 +19,4 @@ export class ParamsActorDto {
   @IsOptional()
   @IsIn(['asc', 'desc'])
   sortOrder?: 'asc' | 'desc';
-
-  @IsOptional()
-  @IsString()
-  search?: string;
 }

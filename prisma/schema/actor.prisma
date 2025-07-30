@@ -9,6 +9,8 @@ model Actor {
   birthDate DateTime
   country   String
 
+  movies Cast[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("update_at")
 

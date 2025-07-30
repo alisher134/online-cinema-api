@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class ParamsCategoryDto {
+export class ParamsMovieDto {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
