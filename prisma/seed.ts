@@ -1,28 +1,85 @@
 import { PrismaClient } from '@prisma/client';
+import { v2 as cloudinary } from 'cloudinary';
 
 import { slugify } from '@/common/utils';
 
+import { actorsData } from './data/actors';
 import { genresData } from './data/genres';
 
 const prisma = new PrismaClient();
 
-async function seedGenres() {
-  for (const genre of genresData) {
-    await prisma.genre.create({
-      data: {
-        title: genre,
-        slug: slugify(genre),
-      },
-    });
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+async function seedActors() {
+  for (const actor of actorsData) {
+    try {
+      const uploadResult = await cloudinary.uploader.upload(actor.photoUrl, { folder: 'actors' });
+
+      await prisma.actor.upsert({
+        where: { slug: slugify(actor.name) },
+        update: {
+          bio: actor.bio,
+          birthDate: actor.birthDate,
+          country: actor.country,
+          photoUrl: uploadResult.secure_url,
+        },
+        create: {
+          name: actor.name,
+          slug: slugify(actor.name),
+          bio: actor.bio,
+          birthDate: actor.birthDate,
+          country: actor.country,
+          photoUrl: uploadResult.secure_url,
+        },
+      });
+
+      console.log(`✅ Actor seeded: ${actor.name}`);
+    } catch (error) {
+      console.warn(`❌ Failed to seed actor: ${actor.name}`, error);
+    }
   }
 }
 
-async function main() {
-  console.log('🌱 Starting seed...');
-  await seedGenres();
+async function seedGenres() {
+  for (const genre of genresData) {
+    try {
+      await prisma.genre.upsert({
+        where: { slug: slugify(genre) },
+        update: {},
+        create: {
+          title: genre,
+          slug: slugify(genre),
+        },
+      });
+
+      console.log(`✅ Genre seeded: ${genre}`);
+    } catch (error) {
+      console.warn(`❌ Failed to seed genre: ${genre}`, error);
+    }
+  }
 }
 
-main()
+type KeyType = 'genre' | 'actor';
+
+async function main(key: KeyType) {
+  console.log('🌱 Starting seed...');
+  switch (key) {
+    case 'genre':
+      await seedGenres();
+      break;
+    case 'actor':
+      await seedActors();
+      break;
+    default:
+      break;
+  }
+}
+
+main('genre')
   .then(async () => {
     await prisma.$disconnect();
   })
