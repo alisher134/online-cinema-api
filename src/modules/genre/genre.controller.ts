@@ -8,7 +8,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 
 import { Auth } from '@/common/decorators';
@@ -23,8 +22,8 @@ export class GenreController {
   constructor(private readonly genreService: GenreService) {}
 
   @HttpCode(HttpStatus.OK)
-  @Get()
-  findAll(@Query() dto: ParamsGenreDto) {
+  @Post()
+  findAll(@Body() dto: ParamsGenreDto) {
     return this.genreService.findAll(dto);
   }
 

@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 
 import { PrismaService } from '@/infra/prisma/prisma.service';
 
+import { buildFilter } from '@/shared/helpers/build-filter';
 import { buildPaginationMeta } from '@/shared/helpers/build-pagination-meta';
 import { buildQueryOptions } from '@/shared/helpers/query-builder';
 
@@ -29,10 +30,8 @@ export class ActorService {
   }
 
   async findAll(dto: ParamsActorDto) {
-    const { where, sortBy, page, skip, perPage } = buildQueryOptions({
-      ...dto,
-      searchFields: ['name'],
-    });
+    const { sortBy, page, skip, perPage } = buildQueryOptions(dto);
+    const { where } = buildFilter(dto);
 
     const [actors, totalRecords] = await Promise.all([
       this.prismaService.actor.findMany({

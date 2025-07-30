@@ -4,6 +4,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { slugify } from '@/common/utils';
 
 import { actorsData } from './data/actors';
+import { categoriesData } from './data/categories';
 import { genresData } from './data/genres';
 
 const prisma = new PrismaClient();
@@ -63,7 +64,26 @@ async function seedGenres() {
   }
 }
 
-type KeyType = 'genre' | 'actor';
+async function seedCategories() {
+  for (const category of categoriesData) {
+    try {
+      await prisma.category.upsert({
+        where: { slug: slugify(category) },
+        update: {},
+        create: {
+          title: category,
+          slug: slugify(category),
+        },
+      });
+
+      console.log(`✅ Category seeded: ${category}`);
+    } catch (error) {
+      console.warn(`❌ Failed to seed category: ${category}`, error);
+    }
+  }
+}
+
+type KeyType = 'genre' | 'actor' | 'category';
 
 async function main(key: KeyType) {
   console.log('🌱 Starting seed...');
@@ -74,12 +94,15 @@ async function main(key: KeyType) {
     case 'actor':
       await seedActors();
       break;
+    case 'category':
+      await seedCategories();
+      break;
     default:
       break;
   }
 }
 
-main('genre')
+main('category')
   .then(async () => {
     await prisma.$disconnect();
   })

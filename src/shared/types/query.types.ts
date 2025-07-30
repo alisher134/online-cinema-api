@@ -1,11 +1,15 @@
-export interface QueryParamsArgs {
-  search?: string;
-  searchFields?: string[];
+export type ParamsArgs = {
+  filter?: Filter[];
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
   page?: number;
   perPage?: number;
-}
+};
+
+export type Filter = {
+  field: string;
+  value: string | string[];
+};
 
 export type PaginationMeta = {
   page: number;

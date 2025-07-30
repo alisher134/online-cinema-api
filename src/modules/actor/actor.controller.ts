@@ -8,7 +8,6 @@ import {
   Param,
   Patch,
   Post,
-  Query,
 } from '@nestjs/common';
 
 import { Auth } from '@/common/decorators';
@@ -23,8 +22,8 @@ export class ActorController {
   constructor(private readonly actorService: ActorService) {}
 
   @HttpCode(HttpStatus.OK)
-  @Get()
-  findAll(@Query() dto: ParamsActorDto) {
+  @Post()
+  findAll(@Body() dto: ParamsActorDto) {
     return this.actorService.findAll(dto);
   }
 
